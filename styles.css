@@ -501,7 +501,7 @@ body:not(.home){
 }
 
 /* =========================================================
-    FIX: STYLES FOR INJECTED NAV (assets/site.js)
+   ✅ FIX: STYLES FOR INJECTED NAV (assets/site.js)
    This is the missing piece that was breaking your layout.
 ========================================================= */
 
@@ -846,7 +846,7 @@ a.btn, a.pill, .ctaRow a.btn, .ctaRow a.pill { text-decoration: none; }
 
 
 /* ==================================================
-   LEGACY COMPONENTS (planner pages) - kept on purpose
+   LEGACY COMPONENTS (planner pages) — kept on purpose
    These classes are used by Month/Profiles/Dashboard.
 ================================================== */
 
@@ -1160,7 +1160,7 @@ details summary{ cursor:pointer; font-weight: 850; color: var(--primary); }
 /* Kid Mode scale */
 body.kidmode{ --kidScale: 1.12; }
 
-/* Make sure content isn't hidden behind fixed header (site.js injected header is fixed) */
+/* Make sure content isn’t hidden behind fixed header (site.js injected header is fixed) */
 body{ padding-top: 92px; }
 @media (min-width: 900px){ body{ padding-top: 86px; } }
 
@@ -1319,7 +1319,7 @@ body.home .topbar{background:rgba(214,226,255,0.96);backdrop-filter:none;-webkit
 
 
 /* ==============================
-   SUPPORT PAGE - BTC DIRECT TRANSFER
+   SUPPORT PAGE — BTC DIRECT TRANSFER
 ============================== */
 .supportSplit{
   display: grid;
@@ -1525,7 +1525,7 @@ body{ padding-top: 92px !important; } /* more breathing room below ribbon */
 
 
 
-/* Support page - light blue credit card button */
+/* Support page – light blue credit card button */
 .support-pay-btn {
   background-color: #d9ecff;
   border: 1px solid #b6dbff;
@@ -1544,7 +1544,7 @@ body{ padding-top: 92px !important; } /* more breathing room below ribbon */
 }
 
 
-/* Support page - light blue Buy Me a Coffee button */
+/* Support page – light blue Buy Me a Coffee button */
 .support-coffee-btn {
   background-color: #d9ecff;
   border: 1px solid #b6dbff;
@@ -1571,14 +1571,14 @@ body{ padding-top: 92px !important; } /* more breathing room below ribbon */
 }
 
 
-/* Support page - extra top offset so content never sits under the fixed header */
+/* Support page – extra top offset so content never sits under the fixed header */
 .page-support .support-main {
   padding-top: calc(var(--topbar-h, 96px) + 14px) !important;
 }
 
 
 
-/* Support page - make Bitcoin QR code smaller so the page stays tidy */
+/* Support page – make Bitcoin QR code smaller so the page stays tidy */
 .btcQr{
   width: 140px;
   max-width: 42vw;
@@ -1588,7 +1588,7 @@ body{ padding-top: 92px !important; } /* more breathing room below ribbon */
 
 
 
-/* Header - keep Kid/Parent toggle tidy on small screens */
+/* Header – keep Kid/Parent toggle tidy on small screens */
 @media (max-width: 420px){
   #kidModeBtn, .kidModeBtn, .modeToggle, .mode-toggle--sm{
     font-size: 12px !important;
@@ -1598,7 +1598,7 @@ body{ padding-top: 92px !important; } /* more breathing room below ribbon */
 
 
 
-/* Support page - spacing between title and copy */
+/* Support page – spacing between title and copy */
 .page-support .supportTitle{
   margin-top: 0;
   margin-bottom: 14px;
@@ -1653,13 +1653,13 @@ body{ padding-top: 92px !important; } /* more breathing room below ribbon */
 .miniLink{ font-size: 13px; }
 
 
-/* Debug page - extra top offset so content never sits under the fixed header */
+/* Debug page – extra top offset so content never sits under the fixed header */
 .page-debug .debug-main{
   padding-top: calc(var(--topbar-h, 96px) + 14px) !important;
 }
 
 
-/* Data policy page - keep content clear of fixed header */
+/* Data policy page – keep content clear of fixed header */
 .page-policy .policy-main{
   padding-top: calc(var(--topbar-h, 96px) + 14px) !important;
 }

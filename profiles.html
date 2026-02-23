@@ -17,11 +17,11 @@
   <div id="site-chrome"></div>
 <main class="wrap stack">
     <section class="card stack">
-      <h1 class="h1">Child Profiles (Year 3-6)</h1>
+      <h1 class="h1">Child Profiles (Year 3–6)</h1>
       <p class="muted">
         Create one profile per child. The plan automatically adjusts to the year group:
-        <span class="lineMobile"><strong>Year 3-4</strong> = Foundation</span>
-        <span class="lineMobile"><strong>Year 5-6</strong> = Builder</span>
+        <span class="lineMobile"><strong>Year 3–4</strong> = Foundation</span>
+        <span class="lineMobile"><strong>Year 5–6</strong> = Builder</span>
       </p>
 
       <div class="grid2">
@@ -48,17 +48,17 @@
           </div>
 
           <div class="quote small">
-            Start date makes week ranges & streaks work nicely (Mon-Sat). If you skip it, the plan still works.
+            Start date makes week ranges & streaks work nicely (Mon–Sat). If you skip it, the plan still works.
           </div>
         </div>
 
         <div class="card card--soft stack">
           <h2 class="h2">Active profile</h2>
           <div class="pillrow">
-            <span class="pill pill--static"><span class="pill__k">Name</span><span class="pill__v" id="activeName">-</span></span>
-            <span class="pill pill--static"><span class="pill__k">Year</span><span class="pill__v" id="activeYear">-</span></span>
-            <span class="pill pill--static"><span class="pill__k">Track</span><span class="pill__v" id="activeTrack">-</span></span>
-            <span class="pill pill--static"><span class="pill__k">Start</span><span class="pill__v" id="activeDate">-</span></span>
+            <span class="pill pill--static"><span class="pill__k">Name</span><span class="pill__v" id="activeName">—</span></span>
+            <span class="pill pill--static"><span class="pill__k">Year</span><span class="pill__v" id="activeYear">—</span></span>
+            <span class="pill pill--static"><span class="pill__k">Track</span><span class="pill__v" id="activeTrack">—</span></span>
+            <span class="pill pill--static"><span class="pill__k">Start</span><span class="pill__v" id="activeDate">—</span></span>
           </div>
           <div class="ctaRow">
             <a class="btn" href="./certificates.html">Certificates</a>
@@ -91,8 +91,8 @@
         const curriculum = YTA.getActiveCurriculum();
 
       document.getElementById("activeName").textContent = active ? active.name : "No profile";
-      document.getElementById("activeYear").textContent = active?.yearGroup ?? "-";
-      document.getElementById("activeTrack").textContent = curriculum?.name ?? "-";
+      document.getElementById("activeYear").textContent = active?.yearGroup ?? "—";
+      document.getElementById("activeTrack").textContent = curriculum?.name ?? "—";
       document.getElementById("activeDate").textContent = active?.startDate ? YTA.fmtDate(active.startDate) : "Not set";
 
       const profiles = YTA.getProfiles();
@@ -105,10 +105,10 @@
         return `
           <div class="row">
             <div>
-              <div class="row__title">${p.name} ${isActive ? "*  Active" : ""}</div>
+              <div class="row__title">${p.name} ${isActive ? "• ✅ Active" : ""}</div>
               <div class="row__meta">
-                Year ${p.yearGroup} * ${trackLabel} * Start: ${p.startDate ? YTA.fmtDate(p.startDate) : "Not set"}
-                * Progress: ${prog.completeDays}/${prog.totalDays} * Streak: ${streak}
+                Year ${p.yearGroup} • ${trackLabel} • Start: ${p.startDate ? YTA.fmtDate(p.startDate) : "Not set"}
+                • Progress: ${prog.completeDays}/${prog.totalDays} • Streak: ${streak}🔥
               </div>
             </div>
             <div class="ctaRow">
@@ -187,7 +187,7 @@
       // Initial render
       render();
 
-      // If the page is restored from BFCache, the DOM can be stale - force a re-render.
+      // If the page is restored from BFCache, the DOM can be stale — force a re-render.
       window.addEventListener("pageshow", () => { try { render(); } catch(e) {} });
     });
   </script>

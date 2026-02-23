@@ -9,7 +9,7 @@ test('Support page payment links are present and clickable', async ({ page }) =>
   await gotoAndAssert(page, '/support.html');
 
   // Coffee link (with emoji)
-  const coffee = page.locator('a:has-text("")').first();
+  const coffee = page.locator('a:has-text("☕")').first();
   await expect(coffee).toBeVisible();
   await expect(coffee).toHaveAttribute('href', /buymeacoffee|support|coffee|http/i);
 
