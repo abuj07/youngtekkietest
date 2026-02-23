@@ -1,4 +1,4 @@
-/* FILE: app.js â YoungTekkie (stable core)
+/* FILE: app.js - YoungTekkie (stable core)
    Provides: profiles, phases rendering, printable plan, dashboard, certificates, kid/parent mode, mobile nav.
    Designed for static GitHub Pages (no server).
 */
@@ -192,7 +192,7 @@
   function ensureParentPassword() {
     const existing = localStorage.getItem(PARENT_PASS_KEY);
     if (existing) return true;
-    const created = window.prompt("Create a Parent password (youâll use this to switch back to Parent mode):");
+    const created = window.prompt("Create a Parent password (you'll use this to switch back to Parent mode):");
     if (!created || created.trim().length < 3) {
       alert("Password not set. Parent unlock will not work until you set one.");
       return false;
@@ -451,7 +451,7 @@
 
     const st = loadState(prof.id);
     const phase = curriculum[phaseKey];
-    if (lineEl) lineEl.textContent = `${phase.title} â¢ ${prof.name} (Year ${prof.year})`;
+    if (lineEl) lineEl.textContent = `${phase.title} * ${prof.name} (Year ${prof.year})`;
 
     listEl.innerHTML = phase.lessons.map(lsn => cardHTML(lsn, !!st.progress[phaseKey][lsn.n])).join("");
 
@@ -516,7 +516,7 @@
       const phase = curriculum[phaseKey];
       const items = phase.lessons.map(lsn => {
         const done = !!st.progress[phaseKey][lsn.n];
-        return `<li>${done ? "â" : "â¬"} Lesson ${lsn.n}: ${lsn.title}</li>`;
+        return `<li>${done ? "" : ""} Lesson ${lsn.n}: ${lsn.title}</li>`;
       }).join("");
       return `<section class="card"><h3>${phase.title}</h3><ul class="printList">${items}</ul></section>`;
     }
@@ -547,7 +547,7 @@
     const streak = computeStreak(prof.id);
 
     who.textContent = `${prof.name} (Year ${prof.year})`;
-    dOverall.innerHTML = `<strong>${prog.pct}%</strong> complete â¢ ${prog.complete}/${prog.total} lessons`;
+    dOverall.innerHTML = `<strong>${prog.pct}%</strong> complete * ${prog.complete}/${prog.total} lessons`;
     dNext.innerHTML = `<span class="muted">Streak:</span> <strong>${streak.streak || 0}</strong> day(s)`;
 
     // simple weekly breakdown: count done per phase (placeholder)
@@ -578,7 +578,7 @@
       <div class="card">
         <h3>Certificates</h3>
         <p class="muted">Automatic certificates can be added later. For now this page shows progress.</p>
-        <p><strong>${prof.name}</strong> â¢ ${prog.complete}/${prog.total} lessons complete (${prog.pct}%)</p>
+        <p><strong>${prof.name}</strong> * ${prog.complete}/${prog.total} lessons complete (${prog.pct}%)</p>
       </div>
     `;
   }
@@ -606,16 +606,16 @@
     function renderActive() {
       const p = getProfileById(getActiveProfileId());
       if (!p) {
-        if (activeName) activeName.textContent = "â";
-        if (activeYear) activeYear.textContent = "â";
-        if (activeTrack) activeTrack.textContent = "â";
-        if (activeDate) activeDate.textContent = "â";
+        if (activeName) activeName.textContent = "-";
+        if (activeYear) activeYear.textContent = "-";
+        if (activeTrack) activeTrack.textContent = "-";
+        if (activeDate) activeDate.textContent = "-";
         return;
       }
-      if (activeName) activeName.textContent = p.name || "â";
-      if (activeYear) activeYear.textContent = p.year ? `Year ${p.year}` : "â";
-      if (activeTrack) activeTrack.textContent = p.track ? (p.track === "foundation" ? "Foundation" : "Builder") : "â";
-      if (activeDate) activeDate.textContent = p.startDate ? fmtDate(p.startDate) : "â";
+      if (activeName) activeName.textContent = p.name || "-";
+      if (activeYear) activeYear.textContent = p.year ? `Year ${p.year}` : "-";
+      if (activeTrack) activeTrack.textContent = p.track ? (p.track === "foundation" ? "Foundation" : "Builder") : "-";
+      if (activeDate) activeDate.textContent = p.startDate ? fmtDate(p.startDate) : "-";
     }
 
     function renderList() {
@@ -630,12 +630,12 @@
       listEl.innerHTML = list.map(p => {
         const isActive = p.id === activeId;
         const trackLabel = p.track === "foundation" ? "Foundation" : "Builder";
-        const startLabel = p.startDate ? fmtDate(p.startDate) : "â";
+        const startLabel = p.startDate ? fmtDate(p.startDate) : "-";
         return `
           <div class="rowCard ${isActive ? "is-active" : ""}" data-id="${p.id}">
             <div class="rowMain">
               <div class="rowTitle">${p.name}</div>
-              <div class="rowMeta small muted">Year ${p.year} â¢ ${trackLabel} â¢ Start: ${startLabel}</div>
+              <div class="rowMeta small muted">Year ${p.year} * ${trackLabel} * Start: ${startLabel}</div>
             </div>
             <div class="rowActions">
               <button class="btn btn--soft btn--sm" type="button" data-act="activate">Set active</button>
@@ -690,7 +690,7 @@
       const year = (yearEl.value || "").trim();
       const startDate = (startEl && startEl.value) ? startEl.value : null;
 
-      if (!name) { alert("Please enter your child’s name."); return; }
+      if (!name) { alert("Please enter your child's name."); return; }
       if (!year) { alert("Please select a year group."); return; }
 
       // Duplicate guard (same name + same year)
