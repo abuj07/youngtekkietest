@@ -1,4 +1,4 @@
-/* FILE: assets/site.js — inject shared nav + mobile drawer + footer (auto-year) */
+/* FILE: assets/site.js - inject shared nav + mobile drawer + footer (auto-year) */
 (function () {
   const KIDMODE_KEY = "yta_kidmode_v2";
   // Responsive label for Kid/Parent toggle (keep header tidy on small screens)
@@ -33,7 +33,7 @@
     if (!mount) return;
 
     let subtitle = (document.body.getAttribute("data-subtitle") || "").trim();
-    if (!subtitle) subtitle = "Foundations for tomorrow’s tech leaders.";
+    if (!subtitle) subtitle = "Foundations for tomorrow's tech leaders.";
     const kidMode = (localStorage.getItem(KIDMODE_KEY) === "1");
     const inJourney = ["phase1.html","phase2.html","phase3.html","month1.html","month2.html","month3.html"].includes(currentFile().toLowerCase());
 mount.innerHTML = `
@@ -55,7 +55,7 @@ mount.innerHTML = `
             <!-- Keep Journey dropdown closed on page-load (prevents it feeling "stuck" open after navigation) -->
             <details class="navDrop">
               <summary class="nav__link nav__link--btn ${inJourney ? "is-active" : ""}">
-                Journey <span class="navDrop__chev" aria-hidden="true">▾</span>
+                Journey <span class="navDrop__chev" aria-hidden="true"></span>
               </summary>
               <div class="navDrop__menu" role="menu" aria-label="Journey phases">
                 <a class="navDrop__item ${isActive(routes.phase1) ? "is-active" : ""}" role="menuitem" href="${routes.phase1}">Phase 1 <span class="navDrop__hint">Scratch</span></a>
@@ -66,11 +66,11 @@ mount.innerHTML = `
           </nav>
           <div class="topbar__actions">
             <a class="tipJarLink" href="./support.html"><span class="tipJarText tipJarText--long">Our tip jar</span><span class="tipJarText tipJarText--short">Tip jar</span></a>
-${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certificates" aria-label="Certificates" data-parent-only="1">🎓</a>`}
-            ${kidMode ? "" : `<a class="iconLink" href="${routes.print}" title="Print plan" aria-label="Print" data-parent-only="1">🖨️</a>`}
-            ${kidMode ? "" : `<a class="iconLink" href="${routes.dashboard}" title="Parent dashboard" aria-label="Parent Dashboard" data-parent-only="1">👨‍👩‍👧</a>`}
+${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certificates" aria-label="Certificates" data-parent-only="1"></a>`}
+            ${kidMode ? "" : `<a class="iconLink" href="${routes.print}" title="Print plan" aria-label="Print" data-parent-only="1"></a>`}
+            ${kidMode ? "" : `<a class="iconLink" href="${routes.dashboard}" title="Parent dashboard" aria-label="Parent Dashboard" data-parent-only="1"></a>`}
 
-            <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="false" aria-label="Open menu">☰</button>
+            <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="false" aria-label="Open menu"></button>
             <button class="mode-toggle mode-toggle--sm" id="kidModeToggle" type="button" aria-pressed="false">${kidMode ? "Kid mode on" : labelForParentOff()}</button>
           </div>
         </div>
@@ -80,7 +80,7 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
       <aside class="drawer" data-yt="drawer" aria-label="Mobile menu">
         <div class="drawerHeader">
           <div class="drawerTitle">Menu</div>
-          <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="true" aria-label="Close menu">✕</button>
+          <button class="menuBtn" type="button" data-yt="navbtn" aria-expanded="true" aria-label="Close menu"></button>
         </div>
         <div class="drawerLinks">
           <a href="${routes.home}">Home</a>
@@ -111,10 +111,10 @@ ${kidMode ? "" : `<a class="iconLink" href="${routes.certificates}" title="Certi
     mount.innerHTML = `
       <footer class="siteFooter">
         <div class="wrap siteFooter__inner">
-          <div class="siteFooter__left">© <span data-yt="year"></span> Youngtekkie</div>
+          <div class="siteFooter__left">(c) <span data-yt="year"></span> Youngtekkie</div>
           <div class="siteFooter__right">
             <a class="siteFooter__link" href="./data-policy.html">Data policy</a>
-            <a class="siteFooter__coffee" href="./support.html" aria-label="Support Youngtekkie">☕ Buy me a coffee</a>
+            <a class="siteFooter__coffee" href="./support.html" aria-label="Support Youngtekkie"> Buy me a coffee</a>
           </div>
         </div>
       </footer>
