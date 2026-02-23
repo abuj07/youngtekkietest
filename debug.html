@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YoungTekkie — Self‑Test / Debug</title>
+  <title>YoungTekkie - Self‑Test / Debug</title>
   <link rel="stylesheet" href="./styles.css" />
   <style>
     .debug-wrap{max-width:980px;margin:24px auto;padding:0 16px}
@@ -35,15 +35,15 @@
         <h1>Self‑Test / Debug</h1>
   <p><a class="miniLink" href="#regression" aria-label="Jump to regression test">Regression test</a></p>
         
-  <p class="muted">If you see “Passed with warnings” but no details, scroll down and check the error panel below.</p>
+  <p class="muted">If you see "Passed with warnings" but no details, scroll down and check the error panel below.</p>
   <div id="debugErrors" class="debugErrors" hidden>
     <div class="debugErrors__title">Debug errors</div>
     <pre id="debugErrorsPre"></pre>
   </div>
-<p>This page runs quick checks to catch “blank page” or “missing data” issues before you deploy.</p>
+<p>This page runs quick checks to catch "blank page" or "missing data" issues before you deploy.</p>
       </div>
       <div>
-        <div class="dbg-badge" id="overallBadge">Running…</div>
+        <div class="dbg-badge" id="overallBadge">Running...</div>
         <div class="dbg-note"><small>Tip: run via a local web server (not <code>file://</code>) for full checks.</small></div>
       </div>
     </div>
@@ -60,7 +60,7 @@
 
     <p class="dbg-note">
       If a test fails, expand its details for the likely cause and fix.
-      This tool is safe to ship (it’s not linked in the main nav), but you can remove it any time.
+      This tool is safe to ship (it's not linked in the main nav), but you can remove it any time.
     </p>
   
   <section id="regression" class="rtSection">
@@ -144,7 +144,7 @@
           const html = await res.text();
           const missing = requiredIds.filter(id => !html.includes(`id="${id}"`) && !html.includes(`id='${id}'`));
           if(missing.length){
-            return {level:'bad', summary:`${file} missing expected mount IDs`, details: missing.map(m => `Missing: #${m}`).concat(['This can cause blank pages if renderers can’t find mount points.'])};
+            return {level:'bad', summary:`${file} missing expected mount IDs`, details: missing.map(m => `Missing: #${m}`).concat(['This can cause blank pages if renderers can't find mount points.'])};
           }
           return {level:'ok', summary:`${file} contains required mount IDs`, details:[]};
         }catch(e){
@@ -304,7 +304,7 @@
     const s = res.summary;
     summary.hidden = false;
     summary.className = 'rtSummary rtSummary--' + s.status;
-    summary.innerHTML = '<strong>Summary:</strong> ' + s.pass + ' pass, ' + s.warn + ' warn, ' + s.fail + ' fail — <strong>' + s.status.toUpperCase() + '</strong> — ' + s.durationMs + 'ms';
+    summary.innerHTML = '<strong>Summary:</strong> ' + s.pass + ' pass, ' + s.warn + ' warn, ' + s.fail + ' fail - <strong>' + s.status.toUpperCase() + '</strong> - ' + s.durationMs + 'ms';
 
     res.results.forEach(r => {
       const card = document.createElement('div');
@@ -322,7 +322,7 @@
 
   async function run(){
     btn.disabled = true;
-    btn.textContent = 'Running…';
+    btn.textContent = 'Running...';
     try{
       const res = await window.YTRegression.run();
       render(res);
@@ -343,8 +343,8 @@
     const res = window.__lastRegression;
     if(!res){ alert('Run the regression test first.'); return; }
     const lines = [];
-    lines.push('YoungTekkie regression results — ' + new Date().toISOString());
-    lines.push('Summary: ' + res.summary.pass + ' pass, ' + res.summary.warn + ' warn, ' + res.summary.fail + ' fail — ' + res.summary.status.toUpperCase() + ' — ' + res.summary.durationMs + 'ms');
+    lines.push('YoungTekkie regression results - ' + new Date().toISOString());
+    lines.push('Summary: ' + res.summary.pass + ' pass, ' + res.summary.warn + ' warn, ' + res.summary.fail + ' fail - ' + res.summary.status.toUpperCase() + ' - ' + res.summary.durationMs + 'ms');
     lines.push('');
     res.results.forEach(r => {
       lines.push(r.id + '. [' + r.status.toUpperCase() + '] ' + r.title);
