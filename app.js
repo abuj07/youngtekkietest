@@ -1,4 +1,4 @@
-/* FILE: app.js - YoungTekkie (stable core)
+/* FILE: app.js — YoungTekkie (stable core)
    Provides: profiles, phases rendering, printable plan, dashboard, certificates, kid/parent mode, mobile nav.
    Designed for static GitHub Pages (no server).
 */
@@ -28,7 +28,16 @@
   }
 
   function loadProfiles() {
-    return safeJSONParse(localStorage.getItem(PROFILES_KEY) || "[]", []);
+    const raw = safeJSONParse(localStorage.getItem(PROFILES_KEY) || "[]", []);
+    // Normalise legacy shapes: some pages use yearGroup while others use year.
+    // We keep both for backwards compatibility.
+    return (Array.isArray(raw) ? raw : []).map(p => {
+      const yearNum = Number((p && (p.year ?? p.yearGroup)) ?? "");
+      const year = Number.isFinite(yearNum) ? yearNum : (p && p.year ? Number(p.year) : null);
+      const yearGroup = (year !== null && Number.isFinite(year)) ? year : (p && p.yearGroup ? Number(p.yearGroup) : null);
+      const track = p && p.track ? p.track : ((year !== null && year <= 4) ? "foundation" : "builder");
+      return { ...(p || {}), year, yearGroup, track };
+    });
   }
   function saveProfiles(list) {
     localStorage.setItem(PROFILES_KEY, JSON.stringify(list || []));
@@ -183,7 +192,7 @@
   function ensureParentPassword() {
     const existing = localStorage.getItem(PARENT_PASS_KEY);
     if (existing) return true;
-    const created = window.prompt("Create a Parent password (you'll use this to switch back to Parent mode):");
+    const created = window.prompt("Create a Parent password (you’ll use this to switch back to Parent mode):");
     if (!created || created.trim().length < 3) {
       alert("Password not set. Parent unlock will not work until you set one.");
       return false;
@@ -342,7 +351,7 @@
   // ---------- profiles ----------
   function createProfile(data) {
     const name = (data.name || "").trim();
-    const year = String(data.year || "").trim();
+    const year = String((data.year ?? data.yearGroup) || "").trim();
     if (!name) throw new Error("Name required");
     if (!year) throw new Error("Year required");
 
@@ -351,6 +360,7 @@
       id: uid(),
       name,
       year: Number(year),
+      yearGroup: Number(year),
       track,
       startDate: data.startDate || null,
       createdAt: new Date().toISOString(),
@@ -368,9 +378,25 @@
     const list = loadProfiles();
     const idx = list.findIndex(p => p.id === id);
     if (idx < 0) return null;
-    list[idx] = { ...list[idx], ...patch, updatedAt: new Date().toISOString() };
+
+    const prev = list[idx] || {};
+    const next = { ...prev, ...(patch || {}) };
+
+    // Keep year & yearGroup in sync (and update track if year changes)
+    const yRaw = (patch && (patch.year ?? patch.yearGroup));
+    if (yRaw !== undefined) {
+      const y = Number(String(yRaw).trim());
+      if (Number.isFinite(y)) {
+        next.year = y;
+        next.yearGroup = y;
+        next.track = (y <= 4) ? "foundation" : "builder";
+      }
+    }
+
+    next.updatedAt = new Date().toISOString();
+    list[idx] = next;
     saveProfiles(list);
-    return list[idx];
+    return next;
   }
 
   function deleteProfile(id) {
@@ -571,134 +597,25 @@
     const activeDate = document.getElementById("activeDate");
 
     if (!nameEl || !yearEl || !createBtn || !listEl) return;
+    // Avoid double-binding if init runs more than once (e.g., after header injection)
+    if (createBtn.dataset && createBtn.dataset.ytaBound === "1") return;
+    if (createBtn.dataset) createBtn.dataset.ytaBound = "1";
+    if (nextMonBtn && nextMonBtn.dataset) nextMonBtn.dataset.ytaBound = "1";
 
-    // Idempotent binding guard
-    if (createBtn.dataset && createBtn.dataset.bound === "1") return;
-    if (createBtn.dataset) createBtn.dataset.bound = "1";
 
     function renderActive() {
       const p = getProfileById(getActiveProfileId());
       if (!p) {
-        if (activeName) activeName.textContent = "-";
-        if (activeYear) activeYear.textContent = "-";
-        if (activeTrack) activeTrack.textContent = "-";
-        if (activeDate) activeDate.textContent = "-";
+        if (activeName) activeName.textContent = "—";
+        if (activeYear) activeYear.textContent = "—";
+        if (activeTrack) activeTrack.textContent = "—";
+        if (activeDate) activeDate.textContent = "—";
         return;
       }
-      if (activeName) activeName.textContent = p.name || "-";
-      if (activeYear) activeYear.textContent = p.year ? ("Year " + p.year) : "-";
-      if (activeTrack) activeTrack.textContent = p.track ? (p.track === "foundation" ? "Foundation" : "Builder") : "-";
-      if (activeDate) activeDate.textContent = p.startDate ? fmtDate(p.startDate) : "-";
-    }
-
-    function renderList() {
-      const list = loadProfiles();
-      if (!list.length) {
-        listEl.innerHTML = '<div class="emptyState">No profiles yet. Create one to get started.</div>';
-        renderActive();
-        return;
-      }
-
-      const activeId = getActiveProfileId();
-      listEl.innerHTML = list.map(p => {
-        const isActive = p.id === activeId;
-        const trackLabel = p.track === "foundation" ? "Foundation" : "Builder";
-        const startLabel = p.startDate ? fmtDate(p.startDate) : "-";
-        return `
-          <div class="rowCard ${isActive ? "is-active" : ""}" data-id="${p.id}">
-            <div class="rowMain">
-              <div class="rowTitle">${p.name}</div>
-              <div class="rowMeta small muted">Year ${p.year} • ${trackLabel} • Start: ${startLabel}</div>
-            </div>
-            <div class="rowActions">
-              <button class="btn btn--soft btn--sm" type="button" data-act="activate">Set active</button>
-              <button class="btn btn--ghost btn--sm" type="button" data-act="delete">Delete</button>
-            </div>
-          </div>
-        `;
-      }).join("");
-
-      listEl.querySelectorAll("[data-act]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const action = btn.getAttribute("data-act");
-          const card = btn.closest(".rowCard");
-          const id = card ? card.getAttribute("data-id") : null;
-          if (!id) return;
-
-          if (action === "activate") {
-            setActiveProfile(id);
-            renderList();
-            renderActive();
-            return;
-          }
-          if (action === "delete") {
-            if (!confirm("Delete this profile? This will remove its saved progress on this device.")) return;
-            deleteProfile(id);
-            const remaining = loadProfiles();
-            if (remaining.length && !getActiveProfileId()) setActiveProfile(remaining[0].id);
-            renderList();
-            renderActive();
-          }
-        });
-      });
-
-      if (!getActiveProfileId() && list.length) setActiveProfile(list[0].id);
-      renderActive();
-    }
-
-    if (nextMonBtn && startEl) {
-      if (nextMonBtn.dataset && nextMonBtn.dataset.bound === "1") {
-        // already bound
-      } else {
-        nextMonBtn.addEventListener("click", (e) => {
-          e.preventDefault();
-          startEl.value = nextMondayISO();
-        });
-        if (nextMonBtn.dataset) nextMonBtn.dataset.bound = "1";
-      }
-    }
-
-    createBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      const name = (nameEl.value || "").trim();
-      const year = (yearEl.value || "").trim();
-      const startDate = (startEl && startEl.value) ? startEl.value : null;
-
-      if (!name) { alert("Please enter a child name."); return; }
-      if (!year) { alert("Please select a year group."); return; }
-
-      const existing = loadProfiles().find(p =>
-        String(p.name || "").trim().toLowerCase() === name.toLowerCase() &&
-        String(p.year) === String(year)
-      );
-      if (existing) {
-        const ok = confirm('A profile for "' + (existing.name || name) + '" (Year ' + (existing.year || year) + ') already exists on this device.
-
-Do you want to create another anyway?');
-        if (!ok) return;
-      }
-
-      try {
-        const prof = createProfile({ name, year, startDate });
-        setActiveProfile(prof.id);
-        nameEl.value = "";
-        if (startEl) startEl.value = "";
-        alert("Profile created successfully.");
-        renderList();
-      } catch (err) {
-        alert(err && err.message ? err.message : "Could not create profile.");
-      }
-    });
-
-    const existingList = loadProfiles();
-    if (existingList.length && !getActiveProfileId()) setActiveProfile(existingList[0].id);
-    renderList();
-  }
-      if (activeName) activeName.textContent = p.name || "-";
-      if (activeYear) activeYear.textContent = p.year ? `Year ${p.year}` : "-";
-      if (activeTrack) activeTrack.textContent = p.track ? (p.track === "foundation" ? "Foundation" : "Builder") : "-";
-      if (activeDate) activeDate.textContent = p.startDate ? fmtDate(p.startDate) : "-";
+      if (activeName) activeName.textContent = p.name || "—";
+      if (activeYear) activeYear.textContent = p.year ? `Year ${p.year}` : "—";
+      if (activeTrack) activeTrack.textContent = p.track ? (p.track === "foundation" ? "Foundation" : "Builder") : "—";
+      if (activeDate) activeDate.textContent = p.startDate ? fmtDate(p.startDate) : "—";
     }
 
     function renderList() {
@@ -713,7 +630,7 @@ Do you want to create another anyway?');
       listEl.innerHTML = list.map(p => {
         const isActive = p.id === activeId;
         const trackLabel = p.track === "foundation" ? "Foundation" : "Builder";
-        const startLabel = p.startDate ? fmtDate(p.startDate) : "-";
+        const startLabel = p.startDate ? fmtDate(p.startDate) : "—";
         return `
           <div class="rowCard ${isActive ? "is-active" : ""}" data-id="${p.id}">
             <div class="rowMain">
@@ -771,46 +688,32 @@ Do you want to create another anyway?');
 
       const name = (nameEl.value || "").trim();
       const year = (yearEl.value || "").trim();
-      const startDate = startEl && startEl.value ? startEl.value : null;
+      const startDate = (startEl && startEl.value) ? startEl.value : null;
 
-      if (!name) {
-        alert("Please enter your child's name.");
-        return;
-      }
-      if (!year) {
-        alert("Please select a year group.");
-        return;
-      }
+      if (!name) { alert("Please enter your child’s name."); return; }
+      if (!year) { alert("Please select a year group."); return; }
 
-      // Duplicate guard (same name + year)
-      const existing = loadProfiles().find(p =>
-        (String(p.name || "").trim().toLowerCase() === name.toLowerCase()) &&
-        (String(p.year) === year)
+      // Duplicate guard (same name + same year)
+      const dup = loadProfiles().find(p =>
+        String(p.name || "").trim().toLowerCase() === name.toLowerCase() &&
+        String(p.year ?? p.yearGroup) === String(year)
       );
-      if (existing) {
-        const ok = confirm("A profile with this name and year already exists. Do you want to create another one anyway?");
+      if (dup) {
+        const y = (dup.year ?? dup.yearGroup);
+        const ok = confirm("A profile for \"" + (dup.name || "") + "\" (Year " + y + ") already exists on this device.\n\nDo you want to create another anyway?");
         if (!ok) return;
       }
+
       try {
         const prof = createProfile({ name, year, startDate });
         setActiveProfile(prof.id);
-        // clear form
         nameEl.value = "";
         if (startEl) startEl.value = "";
         alert("Profile created successfully.");
         renderList();
+        renderActive();
       } catch (err) {
         alert(err && err.message ? err.message : "Could not create profile.");
-      }
-    });
-        setActiveProfile(prof.id);
-        // clear form
-        nameEl.value = "";
-        if (startEl) startEl.value = "";
-        alert("Profile created successfully.");
-        renderList();
-      } catch (e) {
-        alert(e && e.message ? e.message : "Could not create profile.");
       }
     });
 
@@ -834,10 +737,10 @@ Do you want to create another anyway?');
     if (file === "print.html") renderPrint();
     if (file === "dashboard.html") renderDashboard();
     if (file === "certificates.html") renderCertificates();
-    if (file === "profiles.html") initProfilesPage();
+    if (file === "profiles.html" && !window.__USE_INLINE_PROFILES__) initProfilesPage();
 
     // Element-based fallbacks (covers cache-busted URLs or missing .html in path)
-    if (document.getElementById("createProfileBtn")) initProfilesPage();
+    if (document.getElementById("createProfileBtn") && !window.__USE_INLINE_PROFILES__) initProfilesPage();
     if (document.getElementById("dayList") && document.getElementById("trackLine")) {
       // If we couldn't determine phase from filename, default to phase1 mapping
       // (phase pages are separate files normally; this is a safety net only)

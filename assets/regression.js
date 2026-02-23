@@ -1,4 +1,4 @@
-/* FILE: assets/regression.js - in-browser regression checks for static site
+/* FILE: assets/regression.js — in-browser regression checks for static site
    Runs fast, no server required. Focuses on: page load, key DOM, internal links, assets, header/footer injection.
 */
 (function(){
@@ -193,7 +193,7 @@
       title: "Internal links: targets reachable",
       status: broken.length ? "fail" : "pass",
       details: broken.length
-        ? `Broken internal targets (${broken.length}):<br><ul>${broken.slice(0,12).map(b => `<li><code>${b.href}</code> (${b.status || b.err})</li>`).join("")}</ul>${broken.length>12 ? "...(truncated)" : ""}`
+        ? `Broken internal targets (${broken.length}):<br><ul>${broken.slice(0,12).map(b => `<li><code>${b.href}</code> (${b.status || b.err})</li>`).join("")}</ul>${broken.length>12 ? "…(truncated)" : ""}`
         : `Checked ${unique(internalToCheck).length} internal link targets.`
     });
 
@@ -202,7 +202,7 @@
       title: "External links: listed (not validated)",
       status: external.length ? "warn" : "pass",
       details: external.length
-        ? `External links found (${external.length}). Not validated in-browser to avoid CORS/timeouts.<br><ul>${external.slice(0,8).map(u=>`<li><code>${u}</code></li>`).join("")}</ul>${external.length>8 ? "...(truncated)" : ""}`
+        ? `External links found (${external.length}). Not validated in-browser to avoid CORS/timeouts.<br><ul>${external.slice(0,8).map(u=>`<li><code>${u}</code></li>`).join("")}</ul>${external.length>8 ? "…(truncated)" : ""}`
         : "No external links found."
     });
 
@@ -222,7 +222,7 @@
       id: results.length + 1,
       title: "Page includes: styles + scripts",
       status: assetWarn.length ? "warn" : "pass",
-      details: assetWarn.length ? `<ul>${assetWarn.slice(0,14).map(x=>`<li>${x}</li>`).join("")}</ul>${assetWarn.length>14?"...(truncated)":""}` : "All pages include expected core assets."
+      details: assetWarn.length ? `<ul>${assetWarn.slice(0,14).map(x=>`<li>${x}</li>`).join("")}</ul>${assetWarn.length>14?"…(truncated)":""}` : "All pages include expected core assets."
     });
 
     const t1 = now();

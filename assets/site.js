@@ -1,4 +1,4 @@
-/* FILE: assets/site.js - inject shared nav + mobile drawer + footer (auto-year) */
+/* FILE: assets/site.js — inject shared nav + mobile drawer + footer (auto-year) */
 (function () {
   const KIDMODE_KEY = "yta_kidmode_v2";
   // Responsive label for Kid/Parent toggle (keep header tidy on small screens)
@@ -33,7 +33,7 @@
     if (!mount) return;
 
     let subtitle = (document.body.getAttribute("data-subtitle") || "").trim();
-    if (!subtitle) subtitle = "Foundations for tomorrow's tech leaders.";
+    if (!subtitle) subtitle = "Foundations for tomorrow’s tech leaders.";
     const kidMode = (localStorage.getItem(KIDMODE_KEY) === "1");
     const inJourney = ["phase1.html","phase2.html","phase3.html","month1.html","month2.html","month3.html"].includes(currentFile().toLowerCase());
 mount.innerHTML = `
